@@ -10,7 +10,7 @@
         "paysera/lib-object-wrapper": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0",
+        "phpunit/phpunit": "^6.5",
         "paysera/lib-php-cs-fixer-config": "^2.0.0",
         "friendsofphp/php-cs-fixer": "^2.2,<2.11.2"
     },
