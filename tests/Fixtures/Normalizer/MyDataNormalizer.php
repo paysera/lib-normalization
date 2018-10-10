@@ -10,7 +10,6 @@ use Paysera\Component\Normalization\TypeAwareInterface;
 
 class MyDataNormalizer implements NormalizerInterface, TypeAwareInterface
 {
-
     /**
      * @param MyData $data
      * @param NormalizationContext $normalizationContext

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Paysera\Component\Normalization\Tests;
 
+use ArrayIterator;
 use Paysera\Component\Normalization\CoreNormalizer;
 use Paysera\Component\Normalization\DataFilter;
 use Paysera\Component\Normalization\NormalizationContext;
@@ -16,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 
 class CoreNormalizerFunctionalTest extends TestCase
 {
-
     public function testNormalize()
     {
         $normalizerRegistry = new NormalizerRegistry();
@@ -73,7 +73,7 @@ class CoreNormalizerFunctionalTest extends TestCase
         $result = $coreNormalizer->normalize([1, null]);
         $this->assertEquals([1, null], $result);
 
-        $result = $coreNormalizer->normalize(new \ArrayIterator([1, null]));
+        $result = $coreNormalizer->normalize(new ArrayIterator([1, null]));
         $this->assertEquals([1, null], $result);
     }
 }

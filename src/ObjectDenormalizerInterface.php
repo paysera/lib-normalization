@@ -8,7 +8,6 @@ use Paysera\Component\ObjectWrapper\ObjectWrapper;
 
 interface ObjectDenormalizerInterface
 {
-
     /**
      * Converts input data (which is always object in this case) to any data that is used by your business logic.
      * Return value is usually plain object (POPO / ValueObject) or Doctrine Entity.

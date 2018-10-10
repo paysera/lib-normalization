@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Paysera\Component\Normalization;
 
+use InvalidArgumentException;
 use Paysera\Component\Normalization\Denormalizer\ArrayDenormalizer;
 use Paysera\Component\Normalization\Exception\NormalizerNotFoundException;
 use Paysera\Component\Normalization\Normalizer\ArrayNormalizer;
@@ -43,7 +44,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
         } elseif ($normalizer instanceof ObjectDenormalizerInterface) {
             $this->addObjectDenormalizer($normalizer);
         } elseif (!$normalizer instanceof NormalizerInterface) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Given object of class "%s" must be either Normalizer or Denormalizer',
                 get_class($normalizer)
             ));
@@ -54,7 +55,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
     {
         $type = $type ?? $this->resolveType($normalizer);
         if (isset($this->normalizers[$type])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Registering duplicate normalizer for same "%s" type', $type)
             );
         }
@@ -65,7 +66,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
     {
         $type = $type ?? $this->resolveType($denormalizer);
         if (isset($this->objectDenormalizers[$type]) || isset($this->mixedTypeDenormalizers[$type])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Registering duplicate denormalizer for same "%s" type', $type)
             );
         }
@@ -76,7 +77,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
     {
         $type = $type ?? $this->resolveType($denormalizer);
         if (isset($this->objectDenormalizers[$type]) || isset($this->mixedTypeDenormalizers[$type])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Registering duplicate denormalizer for same "%s" type', $type)
             );
         }
@@ -89,7 +90,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
             return $normalizer->getType();
         }
 
-        throw new \InvalidArgumentException('Missing type when registering normalizer which is not type-aware');
+        throw new InvalidArgumentException('Missing type when registering normalizer which is not type-aware');
     }
 
     public function getNormalizer(string $type): NormalizerInterface
@@ -105,7 +106,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
         return isset($this->normalizers[$type]);
     }
 
-    public function getObjectDenormalizer(string $type) : ObjectDenormalizerInterface
+    public function getObjectDenormalizer(string $type): ObjectDenormalizerInterface
     {
         if (!isset($this->objectDenormalizers[$type])) {
             throw new NormalizerNotFoundException($type);
@@ -113,7 +114,7 @@ class NormalizerRegistry implements NormalizerRegistryInterface
         return $this->objectDenormalizers[$type];
     }
 
-    public function getMixedTypeDenormalizer(string $type) : MixedTypeDenormalizerInterface
+    public function getMixedTypeDenormalizer(string $type): MixedTypeDenormalizerInterface
     {
         if (!isset($this->mixedTypeDenormalizers[$type])) {
             if (!isset($this->objectDenormalizers[$type]) && substr($type, -2) === '[]') {

@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class NormalizerRegistryTest extends TestCase
 {
-
     public function testReturnsOverriddenArrayDenormalizer()
     {
         $registry = new NormalizerRegistry();

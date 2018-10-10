@@ -3,36 +3,37 @@ declare(strict_types=1);
 
 namespace Paysera\Component\Normalization;
 
+use Traversable;
+use ReflectionClass;
 use Paysera\Component\Normalization\Exception\NormalizerNotFoundException;
 use Paysera\Component\Normalization\Normalizer\ArrayNormalizer;
 use Paysera\Component\Normalization\Normalizer\PlainNormalizer;
 
 class TypeGuesser implements TypeGuesserInterface
 {
-
-    public function guessType($data, NormalizerRegistry $registry) : string
+    public function guessType($data, NormalizerRegistry $registry): string
     {
         if ($data === null || is_scalar($data)) {
             return PlainNormalizer::KEY;
         } elseif (is_array($data)) {
             return ArrayNormalizer::KEY;
-        } else {
-            $className = get_class($data);
-            if ($registry->hasNormalizer($className)) {
-                return $className;
-            } else {
-                $type = $this->findRegisteredClass(new \ReflectionClass($className), $registry);
-                if ($type !== null) {
-                    return $type;
-                }
-
-                if ($data instanceof \Traversable) {
-                    return ArrayNormalizer::KEY;
-                }
-                
-                throw new NormalizerNotFoundException('Cannot guess normalizer for class ' . $className);
-            }
         }
+
+        $className = get_class($data);
+        if ($registry->hasNormalizer($className)) {
+            return $className;
+        }
+
+        $type = $this->findRegisteredClass(new ReflectionClass($className), $registry);
+        if ($type !== null) {
+            return $type;
+        }
+
+        if ($data instanceof Traversable) {
+            return ArrayNormalizer::KEY;
+        }
+
+        throw new NormalizerNotFoundException('Cannot guess normalizer for class ' . $className);
     }
 
     /**
@@ -40,7 +41,7 @@ class TypeGuesser implements TypeGuesserInterface
      * @param NormalizerRegistry $registry
      * @return null|string
      */
-    protected function findRegisteredClass(\ReflectionClass $reflection, NormalizerRegistry $registry)
+    protected function findRegisteredClass(ReflectionClass $reflection, NormalizerRegistry $registry)
     {
         $interfaceNames = $reflection->getInterfaceNames();
         while ($parent = $reflection->getParentClass()) {
@@ -57,4 +58,4 @@ class TypeGuesser implements TypeGuesserInterface
         }
         return null;
     }
-} 
+}

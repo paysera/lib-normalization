@@ -8,7 +8,6 @@ namespace Paysera\Component\Normalization;
  */
 interface TypeAwareInterface
 {
-
     /**
      * Returns type to be used to register this normalizer or denormalizer to the registry.
      * This is usually a fully qualified name of the class which is being handled by de/normalization.

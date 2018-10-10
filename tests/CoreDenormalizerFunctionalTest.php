@@ -14,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class CoreDenormalizerFunctionalTest extends TestCase
 {
-
     public function testDenormalize()
     {
         $normalizerRegistry = new NormalizerRegistry();
@@ -58,7 +57,7 @@ class CoreDenormalizerFunctionalTest extends TestCase
         $object = (object)[
             'property' => 'my_data',
             'inner' => (object)['inner_property' => 'inner_data'],
-            'inner_list' => [(object)['other_prop' => 'something']]
+            'inner_list' => [(object)['other_prop' => 'something']],
         ];
         $this->expectExceptionObject(new MissingItemException('inner_list.0.inner_property'));
         $coreDenormalizer->denormalize($object, MyData::class);

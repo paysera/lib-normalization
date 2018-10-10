@@ -7,5 +7,4 @@ use RuntimeException;
 
 class NormalizerNotFoundException extends RuntimeException
 {
-
 }

@@ -7,7 +7,6 @@ use Paysera\Component\Normalization\Exception\InvalidDataException;
 
 interface MixedTypeDenormalizerInterface
 {
-
     /**
      * Converts arbitrary input data to any data that is used by your business logic.
      * If input data was object, instance of ObjectWrapper will be passed as an argument.

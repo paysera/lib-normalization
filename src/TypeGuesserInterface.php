@@ -14,5 +14,5 @@ interface TypeGuesserInterface
      *
      * @throws NormalizerNotFoundException
      */
-    public function guessType($data, NormalizerRegistry $registry) : string;
+    public function guessType($data, NormalizerRegistry $registry): string;
 }

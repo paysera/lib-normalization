@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Paysera\Component\Normalization\Normalizer;
 
+use DateTime;
+use DateTimeZone;
 use Paysera\Component\Normalization\DenormalizationContext;
 use Paysera\Component\Normalization\Exception\InvalidDataException;
 use Paysera\Component\Normalization\MixedTypeDenormalizerInterface;
@@ -18,7 +20,7 @@ class DateTimeNormalizer implements NormalizerInterface, MixedTypeDenormalizerIn
     protected $format;
 
     /**
-     * @var \DateTimeZone
+     * @var DateTimeZone
      */
     protected $remoteTimezone;
 
@@ -58,19 +60,19 @@ class DateTimeNormalizer implements NormalizerInterface, MixedTypeDenormalizerIn
         return $date->setTimezone($this->getLocalTimezone());
     }
 
-    protected function getLocalTimezone(): \DateTimeZone
+    protected function getLocalTimezone(): DateTimeZone
     {
-        return new \DateTimeZone(date_default_timezone_get());
+        return new DateTimeZone(date_default_timezone_get());
     }
 
     public function getType(): string
     {
-        return \DateTime::class;
+        return DateTime::class;
     }
 
     protected function createDateTimeFromFormat(string $input)
     {
-        return \DateTime::createFromFormat(
+        return DateTime::createFromFormat(
             $this->format,
             $input,
             $this->remoteTimezone

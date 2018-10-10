@@ -30,14 +30,14 @@ interface NormalizerRegistryInterface
      * @return ObjectDenormalizerInterface
      * @throws NormalizerNotFoundException
      */
-    public function getObjectDenormalizer(string $type) : ObjectDenormalizerInterface;
+    public function getObjectDenormalizer(string $type): ObjectDenormalizerInterface;
 
     /**
      * @param string $type
      * @return MixedTypeDenormalizerInterface
      * @throws NormalizerNotFoundException
      */
-    public function getMixedTypeDenormalizer(string $type) : MixedTypeDenormalizerInterface;
+    public function getMixedTypeDenormalizer(string $type): MixedTypeDenormalizerInterface;
 
     /**
      * @param string $type

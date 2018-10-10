@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Paysera\Component\Normalization;
 
+use InvalidArgumentException;
+use stdClass;
 use Paysera\Component\Normalization\Exception\InvalidDataException;
 use Paysera\Component\ObjectWrapper\ObjectWrapper;
 
@@ -26,15 +28,15 @@ class CoreDenormalizer
         if ($denormalizerType === NormalizerRegistry::DENORMALIZER_TYPE_MIXED) {
             $denormalizer = $this->registry->getMixedTypeDenormalizer($type);
         } elseif ($denormalizerType === NormalizerRegistry::DENORMALIZER_TYPE_OBJECT) {
-            if (!$data instanceof \stdClass && !$data instanceof ObjectWrapper) {
+            if (!$data instanceof stdClass && !$data instanceof ObjectWrapper) {
                 throw new InvalidDataException(sprintf('Expected object, got %s', gettype($data)));
             }
             $denormalizer = $this->registry->getObjectDenormalizer($type);
         } else {
-            throw new \InvalidArgumentException(sprintf('Denormalizer with type "%s" is not registered', $type));
+            throw new InvalidArgumentException(sprintf('Denormalizer with type "%s" is not registered', $type));
         }
 
-        if ($data instanceof \stdClass) {
+        if ($data instanceof stdClass) {
             $data = new ObjectWrapper($data);
         }
 

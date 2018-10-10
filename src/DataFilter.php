@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Paysera\Component\Normalization;
 
+use stdClass;
+
 class DataFilter
 {
     public function filterData($data, NormalizationContext $context)
@@ -12,7 +14,7 @@ class DataFilter
                 return $this->filterObject($data, $context);
             }
             return $this->filterArray($data, $context);
-        } elseif ($data instanceof \stdClass) {
+        } elseif ($data instanceof stdClass) {
             return $this->filterObject($data, $context);
         } elseif (is_scalar($data)) {
             return $data;
@@ -33,7 +35,7 @@ class DataFilter
 
     private function filterObject($data, NormalizationContext $context)
     {
-        $result = new \stdClass();
+        $result = new stdClass();
         foreach ($data as $key => $value) {
             if ($value !== null && $context->isFieldIncluded($key)) {
                 $result->$key = $this->filterData($value, $context->createScopedContext($key));
