@@ -5,16 +5,16 @@ namespace Paysera\Component\Normalization;
 
 class CoreNormalizer
 {
-    private $registry;
+    private $registryProvider;
     private $typeGuesser;
     private $dataFilter;
 
     public function __construct(
-        NormalizerRegistry $registry,
-        TypeGuesser $typeGuesser,
+        NormalizerRegistryProviderInterface $registryProvider,
+        TypeGuesserInterface $typeGuesser,
         DataFilter $dataFilter
     ) {
-        $this->registry = $registry;
+        $this->registryProvider = $registryProvider;
         $this->typeGuesser = $typeGuesser;
         $this->dataFilter = $dataFilter;
     }
@@ -25,14 +25,17 @@ class CoreNormalizer
             return null;
         }
 
-        if ($type === null) {
-            $type = $this->typeGuesser->guessType($data, $this->registry);
-        }
-        $normalizer = $this->registry->getNormalizer($type);
-
         if ($context === null) {
             $context = new NormalizationContext($this);
         }
+        $registry = $this->registryProvider->getNormalizerRegistryForNormalizationGroup(
+            $context->getNormalizationGroup()
+        );
+
+        if ($type === null) {
+            $type = $this->typeGuesser->guessType($data, $registry);
+        }
+        $normalizer = $registry->getNormalizer($type);
 
         $result = $normalizer->normalize($data, $context);
 

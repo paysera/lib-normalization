@@ -1,8 +1,16 @@
 {
     "name": "paysera/lib-normalization",
+    "description": "Library for normalizing and denormalizing PHP objects to and from JSON structures",
+    "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Paysera\\Component\\Normalization\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Paysera\\Component\\Normalization\\Tests\\": "tests/"
         }
     },
     "require": {
@@ -11,13 +19,16 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5",
-        "paysera/lib-php-cs-fixer-config": "^2.0.0",
-        "friendsofphp/php-cs-fixer": "^2.2,<2.11.2"
+        "paysera/lib-php-cs-fixer-config": "^2.2.2",
+        "mockery/mockery": "^1.2"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Paysera\\Component\\Normalization\\Tests\\": "tests/"
-        }
+    "config": {
+        "bin-dir": "bin"
     },
-    "minimum-stability": "dev"
+    "scripts": {
+        "phpunit": "phpunit",
+        "fix-cs": "paysera-php-cs-fixer fix",
+        "test-cs": "paysera-php-cs-fixer fix --dry-run -v",
+        "test": ["@phpunit", "@test-cs"]
+    }
 }

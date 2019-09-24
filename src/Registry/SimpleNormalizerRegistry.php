@@ -1,33 +1,45 @@
 <?php
 declare(strict_types=1);
 
-namespace Paysera\Component\Normalization;
+namespace Paysera\Component\Normalization\Registry;
 
 use InvalidArgumentException;
 use Paysera\Component\Normalization\Denormalizer\ArrayDenormalizer;
 use Paysera\Component\Normalization\Exception\NormalizerNotFoundException;
+use Paysera\Component\Normalization\MixedTypeDenormalizerInterface;
 use Paysera\Component\Normalization\Normalizer\ArrayNormalizer;
 use Paysera\Component\Normalization\Normalizer\PlainNormalizer;
+use Paysera\Component\Normalization\NormalizerInterface;
+use Paysera\Component\Normalization\NormalizerRegistryInterface;
+use Paysera\Component\Normalization\ObjectDenormalizerInterface;
+use Paysera\Component\Normalization\TypeAwareInterface;
 
-class NormalizerRegistry implements NormalizerRegistryInterface
+/**
+ * @internal
+ */
+class SimpleNormalizerRegistry implements NormalizerRegistryInterface
 {
     /**
      * @var NormalizerInterface[]
      */
-    protected $normalizers = [];
+    private $normalizers;
 
     /**
      * @var ObjectDenormalizerInterface[]
      */
-    protected $objectDenormalizers = [];
+    private $objectDenormalizers;
 
     /**
      * @var MixedTypeDenormalizerInterface[]
      */
-    protected $mixedTypeDenormalizers = [];
+    private $mixedTypeDenormalizers;
 
     public function __construct()
     {
+        $this->normalizers = [];
+        $this->objectDenormalizers = [];
+        $this->mixedTypeDenormalizers = [];
+
         $this->addNormalizer(new PlainNormalizer());
         $this->addNormalizer(new ArrayNormalizer());
         $this->addMixedTypeDenormalizer(new PlainNormalizer());

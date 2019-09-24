@@ -9,11 +9,16 @@ class NormalizationContext
     private $defaultFieldsIncluded;
     private $includedFields;
     private $path;
+    private $normalizationGroup;
 
-    public function __construct(CoreNormalizer $coreNormalizer, array $includedFields = [])
-    {
+    public function __construct(
+        CoreNormalizer $coreNormalizer,
+        array $includedFields = [],
+        string $normalizationGroup = null
+    ) {
         $this->coreNormalizer = $coreNormalizer;
         $this->setIncludedFields($includedFields);
+        $this->normalizationGroup = $normalizationGroup;
         $this->path = [];
     }
 
@@ -30,6 +35,14 @@ class NormalizationContext
     public function getPath(): array
     {
         return $this->path;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNormalizationGroup()
+    {
+        return $this->normalizationGroup;
     }
 
     public function normalize($data, string $fieldName, string $type = null)

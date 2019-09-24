@@ -9,10 +9,10 @@ interface TypeGuesserInterface
 {
     /**
      * @param mixed $data
-     * @param NormalizerRegistry $registry
+     * @param NormalizerRegistryInterface $registry
      * @return string
      *
      * @throws NormalizerNotFoundException
      */
-    public function guessType($data, NormalizerRegistry $registry): string;
+    public function guessType($data, NormalizerRegistryInterface $registry): string;
 }

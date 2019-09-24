@@ -13,12 +13,17 @@ class MyData
     /**
      * @var InnerData[]
      */
-    private $innerDataList = [];
+    private $innerDataList;
 
     /**
      * @var string
      */
     private $property;
+
+    public function __construct()
+    {
+        $this->innerDataList = [];
+    }
 
     /**
      * @return InnerData|null

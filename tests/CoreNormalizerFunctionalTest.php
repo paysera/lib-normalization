@@ -4,29 +4,31 @@ declare(strict_types=1);
 namespace Paysera\Component\Normalization\Tests;
 
 use ArrayIterator;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Paysera\Component\Normalization\CoreNormalizer;
 use Paysera\Component\Normalization\DataFilter;
 use Paysera\Component\Normalization\NormalizationContext;
-use Paysera\Component\Normalization\NormalizerRegistry;
+use Paysera\Component\Normalization\NormalizerInterface;
+use Paysera\Component\Normalization\Registry\GroupedNormalizerRegistryProvider;
 use Paysera\Component\Normalization\Tests\Fixtures\Entity\InnerData;
 use Paysera\Component\Normalization\Tests\Fixtures\Entity\MyData;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\InnerDataNormalizer;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\MyDataNormalizer;
 use Paysera\Component\Normalization\TypeGuesser;
-use PHPUnit\Framework\TestCase;
 
-class CoreNormalizerFunctionalTest extends TestCase
+class CoreNormalizerFunctionalTest extends MockeryTestCase
 {
     public function testNormalize()
     {
-        $normalizerRegistry = new NormalizerRegistry();
-        $normalizerRegistry->addNormalizer(new MyDataNormalizer());
-        $normalizerRegistry->addNormalizer(new InnerDataNormalizer());
+        $normalizerRegistryProvider = new GroupedNormalizerRegistryProvider();
+        $normalizerRegistryProvider->addNormalizer(new MyDataNormalizer());
+        $normalizerRegistryProvider->addNormalizer(new InnerDataNormalizer());
 
         $typeGuesser = new TypeGuesser();
         $dataFilter = new DataFilter();
 
-        $coreNormalizer = new CoreNormalizer($normalizerRegistry, $typeGuesser, $dataFilter);
+        $coreNormalizer = new CoreNormalizer($normalizerRegistryProvider, $typeGuesser, $dataFilter);
 
         $result = $coreNormalizer->normalize((new MyData())->setProperty('my_data')->setInnerData(
             (new InnerData())->setProperty('inner_data')->setOptionalProperty('optional_value')
@@ -75,5 +77,27 @@ class CoreNormalizerFunctionalTest extends TestCase
 
         $result = $coreNormalizer->normalize(new ArrayIterator([1, null]));
         $this->assertEquals([1, null], $result);
+    }
+
+    public function testNormalizeWithDifferentGroups()
+    {
+        $normalizerRegistryProvider = new GroupedNormalizerRegistryProvider();
+
+        $array = ['group' => 'none'];
+        $normalizer = Mockery::mock(NormalizerInterface::class);
+        $normalizer->shouldReceive('normalize')->andReturn($array);
+
+        $arrayForA = ['group' => 'A'];
+        $normalizerForA = Mockery::mock(NormalizerInterface::class);
+        $normalizerForA->shouldReceive('normalize')->andReturn($arrayForA);
+
+        $normalizerRegistryProvider->addNormalizer($normalizer, 'type');
+        $normalizerRegistryProvider->addNormalizer($normalizerForA, 'type', 'groupA');
+
+        $coreNormalizer = new CoreNormalizer($normalizerRegistryProvider, new TypeGuesser(), new DataFilter());
+        $context = new NormalizationContext($coreNormalizer, [], 'groupA');
+        $result = $coreNormalizer->normalize((object)[], 'type', $context);
+
+        $this->assertEquals($arrayForA, (array)$result);
     }
 }

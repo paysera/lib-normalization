@@ -11,7 +11,7 @@ use Paysera\Component\Normalization\Normalizer\PlainNormalizer;
 
 class TypeGuesser implements TypeGuesserInterface
 {
-    public function guessType($data, NormalizerRegistry $registry): string
+    public function guessType($data, NormalizerRegistryInterface $registry): string
     {
         if ($data === null || is_scalar($data)) {
             return PlainNormalizer::KEY;
@@ -37,11 +37,11 @@ class TypeGuesser implements TypeGuesserInterface
     }
 
     /**
-     * @param \ReflectionClass $reflection
-     * @param NormalizerRegistry $registry
+     * @param ReflectionClass $reflection
+     * @param NormalizerRegistryInterface $registry
      * @return null|string
      */
-    protected function findRegisteredClass(ReflectionClass $reflection, NormalizerRegistry $registry)
+    protected function findRegisteredClass(ReflectionClass $reflection, NormalizerRegistryInterface $registry)
     {
         $interfaceNames = $reflection->getInterfaceNames();
         while ($parent = $reflection->getParentClass()) {

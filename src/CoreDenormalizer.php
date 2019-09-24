@@ -10,28 +10,31 @@ use Paysera\Component\ObjectWrapper\ObjectWrapper;
 
 class CoreDenormalizer
 {
-    protected $registry;
+    protected $registryProvider;
 
-    public function __construct(NormalizerRegistry $registry)
+    public function __construct(NormalizerRegistryProviderInterface $registryProvider)
     {
-        $this->registry = $registry;
+        $this->registryProvider = $registryProvider;
     }
 
-    public function denormalize($data, string $type)
+    public function denormalize($data, string $type, DenormalizationContext $context = null)
     {
         if ($data === null) {
             return null;
         }
 
-        $denormalizerType = $this->registry->getDenormalizerType($type);
+        $normalizationGroup = $context !== null ? $context->getNormalizationGroup() : null;
+        $registry = $this->registryProvider->getNormalizerRegistryForNormalizationGroup($normalizationGroup);
 
-        if ($denormalizerType === NormalizerRegistry::DENORMALIZER_TYPE_MIXED) {
-            $denormalizer = $this->registry->getMixedTypeDenormalizer($type);
-        } elseif ($denormalizerType === NormalizerRegistry::DENORMALIZER_TYPE_OBJECT) {
+        $denormalizerType = $registry->getDenormalizerType($type);
+
+        if ($denormalizerType === NormalizerRegistryInterface::DENORMALIZER_TYPE_MIXED) {
+            $denormalizer = $registry->getMixedTypeDenormalizer($type);
+        } elseif ($denormalizerType === NormalizerRegistryInterface::DENORMALIZER_TYPE_OBJECT) {
             if (!$data instanceof stdClass && !$data instanceof ObjectWrapper) {
                 throw new InvalidDataException(sprintf('Expected object, got %s', gettype($data)));
             }
-            $denormalizer = $this->registry->getObjectDenormalizer($type);
+            $denormalizer = $registry->getObjectDenormalizer($type);
         } else {
             throw new InvalidArgumentException(sprintf('Denormalizer with type "%s" is not registered', $type));
         }
@@ -40,6 +43,10 @@ class CoreDenormalizer
             $data = new ObjectWrapper($data);
         }
 
-        return $denormalizer->denormalize($data, new DenormalizationContext($this));
+        if ($context === null) {
+            $context = new DenormalizationContext($this);
+        }
+
+        return $denormalizer->denormalize($data, $context);
     }
 }

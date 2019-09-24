@@ -9,7 +9,6 @@ interface NormalizerRegistryInterface
 {
     const DENORMALIZER_TYPE_OBJECT = 'object';
     const DENORMALIZER_TYPE_MIXED = 'mixed';
-    const DENORMALIZER_TYPE_ARRAY = 'array';
     const DENORMALIZER_TYPE_NONE = 'none';
 
     /**
