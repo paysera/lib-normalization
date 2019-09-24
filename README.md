@@ -11,6 +11,9 @@ This library allows to de/normalize your business entities (plain PHP objects)
 without tightly coupling them with your normalization format. You would usually do this
 before converting normalized structure to JSON or after converting from it.
 
+If you intend to use the library with Symfony, use 
+[lib-normalization-bundle](https://github.com/paysera/lib-normalization-bundle) instead.
+
 ## Why?
 
 Symfony has Serializer component that has normalizers as a part of it.
@@ -35,9 +38,6 @@ Main features of this library:
 - easily reuse other de/normalizers without direct dependencies;
 - supports different normalization groups with fallback to default one;
 - supports explicitly or implicitly included fields, allowing performance tuning in normalization process.
-
-If you intend to use the library with Symfony, use 
-[lib-normalization-bundle](https://github.com/paysera/lib-normalization-bundle) instead.
 
 ## Installation
 
