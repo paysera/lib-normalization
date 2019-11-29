@@ -15,6 +15,7 @@ use Paysera\Component\Normalization\Tests\Fixtures\Entity\InnerData;
 use Paysera\Component\Normalization\Tests\Fixtures\Entity\MyData;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\InnerDataNormalizer;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\MyDataNormalizer;
+use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\WrappedNormalizer;
 use Paysera\Component\Normalization\TypeGuesser;
 
 class CoreNormalizerFunctionalTest extends MockeryTestCase
@@ -24,6 +25,7 @@ class CoreNormalizerFunctionalTest extends MockeryTestCase
         $normalizerRegistryProvider = new GroupedNormalizerRegistryProvider();
         $normalizerRegistryProvider->addNormalizer(new MyDataNormalizer());
         $normalizerRegistryProvider->addNormalizer(new InnerDataNormalizer());
+        $normalizerRegistryProvider->addNormalizer(new WrappedNormalizer(), 'wrapped');
 
         $typeGuesser = new TypeGuesser();
         $dataFilter = new DataFilter();
@@ -77,6 +79,18 @@ class CoreNormalizerFunctionalTest extends MockeryTestCase
 
         $result = $coreNormalizer->normalize(new ArrayIterator([1, null]));
         $this->assertEquals([1, null], $result);
+
+        $result = $coreNormalizer->normalize((new MyData())->setInnerDataList([
+            (new InnerData())->setProperty('inner_data1'),
+        ]), 'wrapped', new NormalizationContext(
+            $coreNormalizer,
+            ['inner_list']
+        ));
+        $this->assertEquals((object)[
+            'inner_list' => [
+                (object)['inner_property' => 'inner_data1'],
+            ],
+        ], $result);
     }
 
     public function testNormalizeWithDifferentGroups()

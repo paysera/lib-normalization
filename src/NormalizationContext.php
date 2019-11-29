@@ -47,7 +47,7 @@ class NormalizationContext
 
     public function normalize($data, string $fieldName, string $type = null)
     {
-        if (!$this->isFieldIncluded($fieldName)) {
+        if (!$this->isFieldIncluded($fieldName) && !$this->isArrayItem($fieldName)) {
             return null;
         }
 

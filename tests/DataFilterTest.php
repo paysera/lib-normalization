@@ -13,7 +13,6 @@ use stdClass;
 
 class DataFilterTest extends MockeryTestCase
 {
-
     /**
      * @dataProvider providerForFilterDataWithoutFiltering
      * @param string $expected
