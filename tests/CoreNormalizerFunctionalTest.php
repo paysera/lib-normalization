@@ -41,10 +41,10 @@ class CoreNormalizerFunctionalTest extends MockeryTestCase
         $this->assertEquals(
             (object)[
                 'property' => 'my_data',
-                'inner' => (object)['inner_property' => 'inner_data'],
+                'inner' => (object)['inner_property' => 'inner_data', 'optional_property' => null],
                 'inner_list' => [
-                    (object)['inner_property' => 'inner_data1'],
-                    (object)['inner_property' => 'inner_data2'],
+                    (object)['inner_property' => 'inner_data1', 'optional_property' => null],
+                    (object)['inner_property' => 'inner_data2', 'optional_property' => null],
                 ],
             ],
             $result
@@ -64,15 +64,15 @@ class CoreNormalizerFunctionalTest extends MockeryTestCase
             'inner' => (object)['inner_property' => 'inner_data', 'optional_property' => 'optional_value'],
             'inner_list' => [
                 (object)['inner_property' => 'inner_data1', 'optional_property' => 'optional_value1'],
-                (object)['inner_property' => 'inner_data2'],
+                (object)['inner_property' => 'inner_data2', 'optional_property' => null],
             ],
         ], $result);
 
         $result = $coreNormalizer->normalize((new MyData())->setProperty('my_data'));
-        $this->assertEquals((object)['property' => 'my_data', 'inner_list' => []], $result);
+        $this->assertEquals((object)['property' => 'my_data', 'inner_list' => [], 'inner' => null], $result);
 
         $result = $coreNormalizer->normalize((new MyData()));
-        $this->assertEquals((object)['inner_list' => []], $result);
+        $this->assertEquals((object)['inner_list' => [], 'inner' => null, 'property' => null], $result);
 
         $result = $coreNormalizer->normalize([1, null]);
         $this->assertEquals([1, null], $result);
@@ -88,7 +88,7 @@ class CoreNormalizerFunctionalTest extends MockeryTestCase
         ));
         $this->assertEquals((object)[
             'inner_list' => [
-                (object)['inner_property' => 'inner_data1'],
+                (object)['inner_property' => 'inner_data1', 'optional_property' => null],
             ],
         ], $result);
     }

@@ -16,7 +16,7 @@ class DataFilter
             return $this->filterArray($data, $context);
         } elseif ($data instanceof stdClass) {
             return $this->filterObject($data, $context);
-        } elseif (is_scalar($data)) {
+        } elseif (is_scalar($data) || $data === null) {
             return $data;
         }
 
@@ -38,7 +38,7 @@ class DataFilter
         $result = new stdClass();
         foreach ($data as $key => $value) {
             $key = (string)$key;
-            if ($value !== null && $context->isFieldIncluded($key)) {
+            if ($context->isFieldIncluded($key)) {
                 $result->$key = $this->filterData($value, $context->createScopedContext($key));
             }
         }
