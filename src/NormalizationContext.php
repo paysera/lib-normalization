@@ -10,6 +10,7 @@ class NormalizationContext
     private $includedFields;
     private $path;
     private $normalizationGroup;
+    private $nullValuesRemoved;
 
     public function __construct(
         CoreNormalizer $coreNormalizer,
@@ -20,6 +21,7 @@ class NormalizationContext
         $this->setIncludedFields($includedFields);
         $this->normalizationGroup = $normalizationGroup;
         $this->path = [];
+        $this->nullValuesRemoved = false;
     }
 
     private function setIncludedFields(array $includedFields, bool $defaultFieldsIncluded = false)
@@ -57,6 +59,7 @@ class NormalizationContext
     public function createScopedContext(string $fieldName): self
     {
         $context = clone $this;
+        $context->nullValuesRemoved = false;
 
         if ($this->isArrayItem($fieldName)) {
             return $context;
@@ -90,5 +93,15 @@ class NormalizationContext
     private function isArrayItem(string $fieldName)
     {
         return $fieldName === '';
+    }
+
+    public function markNullValuesForRemoval()
+    {
+        $this->nullValuesRemoved = true;
+    }
+
+    public function areNullValuesRemoved(): bool
+    {
+        return $this->nullValuesRemoved;
     }
 }
