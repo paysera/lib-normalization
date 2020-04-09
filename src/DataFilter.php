@@ -37,10 +37,16 @@ class DataFilter
     {
         $result = new stdClass();
         foreach ($data as $key => $value) {
-            $key = (string)$key;
-            if ($context->isFieldIncluded($key)) {
-                $result->$key = $this->filterData($value, $context->createScopedContext($key));
+            if ($context->areNullValuesRemoved() && $value === null) {
+                continue;
             }
+
+            $key = (string)$key;
+            if (!$context->isFieldIncluded($key)) {
+                continue;
+            }
+
+            $result->$key = $this->filterData($value, $context->createScopedContext($key));
         }
         return $result;
     }

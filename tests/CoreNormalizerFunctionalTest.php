@@ -13,6 +13,7 @@ use Paysera\Component\Normalization\NormalizerInterface;
 use Paysera\Component\Normalization\Registry\GroupedNormalizerRegistryProvider;
 use Paysera\Component\Normalization\Tests\Fixtures\Entity\InnerData;
 use Paysera\Component\Normalization\Tests\Fixtures\Entity\MyData;
+use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\FilterOutNullsNormalizer;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\InnerDataNormalizer;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\MyDataNormalizer;
 use Paysera\Component\Normalization\Tests\Fixtures\Normalizer\WrappedNormalizer;
@@ -113,5 +114,28 @@ class CoreNormalizerFunctionalTest extends MockeryTestCase
         $result = $coreNormalizer->normalize((object)[], 'type', $context);
 
         $this->assertEquals($arrayForA, (array)$result);
+    }
+
+    public function testNormalizeWithFilterOutNullsFunctionality()
+    {
+        $normalizerRegistryProvider = new GroupedNormalizerRegistryProvider();
+        $normalizerRegistryProvider->addNormalizer(new FilterOutNullsNormalizer(), MyData::class);
+        $normalizerRegistryProvider->addNormalizer(new InnerDataNormalizer());
+
+        $typeGuesser = new TypeGuesser();
+        $dataFilter = new DataFilter();
+
+        $coreNormalizer = new CoreNormalizer($normalizerRegistryProvider, $typeGuesser, $dataFilter);
+
+        $result = $coreNormalizer->normalize((new MyData())->setInnerData(
+            (new InnerData())->setProperty('inner_data')
+        ));
+        $this->assertEquals(
+            (object)[
+                'inner' => (object)['inner_property' => 'inner_data', 'optional_property' => null],
+                'inner_list' => [],
+            ],
+            $result
+        );
     }
 }
