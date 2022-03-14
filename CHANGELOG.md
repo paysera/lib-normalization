@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0]
 ### Added
 - Support from PHP 8.0
+
+### Removed
+- Removed (temporary) paysera/lib-php-cs-fixer-config
   
 ## [1.1.0]
 ### Added
