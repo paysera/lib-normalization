@@ -14,12 +14,11 @@
         }
     },
     "require": {
-        "php": "^7.0",
-        "paysera/lib-object-wrapper": "^0.2.0"
+        "php": "^7.0 || ^8.0",
+        "paysera/lib-object-wrapper": "^0.3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5",
-        "paysera/lib-php-cs-fixer-config": "^2.2.2",
+        "phpunit/phpunit": "^6.5 || ^9.0",
         "mockery/mockery": "^1.2",
         "ext-json": "*"
     },
@@ -28,8 +27,6 @@
     },
     "scripts": {
         "phpunit": "phpunit",
-        "fix-cs": "paysera-php-cs-fixer fix",
-        "test-cs": "paysera-php-cs-fixer fix --dry-run -v",
-        "test": ["@phpunit", "@test-cs"]
+        "test": ["@phpunit"]
     }
 }
