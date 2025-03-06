@@ -54,7 +54,7 @@ class DateTimeNormalizer implements NormalizerInterface, MixedTypeDenormalizerIn
             throw new InvalidDataException('Provided date format is invalid');
         }
         $dateErrors = date_get_last_errors();
-        if ($dateErrors['warning_count'] > 0 || $dateErrors['error_count'] > 0) {
+        if ($dateErrors !== false && ($dateErrors['warning_count'] > 0 || $dateErrors['error_count'] > 0)) {
             throw new InvalidDataException('The parsed date was invalid');
         }
         return $date->setTimezone($this->getLocalTimezone());
