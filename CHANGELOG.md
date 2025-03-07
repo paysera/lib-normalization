@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.1]
 ### Changed
 - Fixed handling the `date_get_last_errors` function returning `false` since PHP 8.2 when no errors occurred
+- Updated `mocker/mockery` to `^1.3`
 
 ## [1.3.0]
 ### Added
