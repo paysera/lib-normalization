@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, migrate-from-travis-to-github-actions ]
   pull_request:
     branches: [ master ]
 
